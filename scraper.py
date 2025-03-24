@@ -6,7 +6,6 @@ import time
 import pandas as pd
 
 
-
 def login() -> requests.Session:
     login_info = utils.login_info()
     sess = requests.session()

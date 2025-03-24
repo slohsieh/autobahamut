@@ -20,3 +20,4 @@ def login_info():
         'passwd': config_data['account']['password'],
         'vcode': '7045'
     }
+    return data

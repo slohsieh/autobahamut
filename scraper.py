@@ -89,3 +89,13 @@ def get_all_pages(base_url, sess):
         time.sleep(1)
 
     return all_orders
+
+def read_orders_df():
+    base_url = 'https://buy.gamer.com.tw/atmHistory.php?filter=5'
+    sess = login()
+    all_orders = get_all_pages(base_url, sess)
+    df = pd.DataFrame(all_orders)
+    df['price'] = pd.to_numeric(df['price'])
+    df['order_date'] = pd.to_datetime(df['order_date'])
+    df = df.sort_values('order_date', ascending=False)
+    return df

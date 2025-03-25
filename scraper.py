@@ -9,28 +9,10 @@ import pandas as pd
 def login() -> requests.Session:
     login_info = utils.login_info()
     sess = requests.session()
-    sess.headers.update(
-        {
-            'user-agent': 'Bahadroid (https://www.gamer.com.tw/)',
-            'x-bahamut-app-instanceid': 'cc2zQIfDpg4',
-            'x-bahamut-app-android': 'tw.com.gamer.android.activecenter',
-            'x-bahamut-app-version': '251',
-            'content-type': 'application/x-www-form-urlencoded',
-            'content-length': '44',
-            'accept-encoding': 'gzip',
-            'cookie': 'ckAPP_VCODE=7045'
-        },
-    )
-
+    sess.headers.update(utils.headers_pre_login)
     sess.post('https://api.gamer.com.tw/mobile_app/user/v3/do_login.php', 
               data=login_info)
-    sess.headers = {
-        'user-agent': 'Bahadroid (https://www.gamer.com.tw/)',
-        'x-bahamut-app-instanceid': 'cc2zQIfDpg4',
-        'x-bahamut-app-android': 'tw.com.gamer.android.activecenter',
-        'x-bahamut-app-version': '251',
-        'accept-encoding': 'gzip'
-    }
+    sess.headers = utils.headers_post_login
     return sess
 
 def parse_order_data(html_content):
@@ -41,6 +23,7 @@ def parse_order_data(html_content):
     for block in order_blocks:
         order_num = block.find('a', class_='sign-number-content').text.strip()
         order_date = block.find('p', class_='sign-number-content').text.strip()
+        platform = block.find('span', class_=lambda x: x and x.startswith('img-color-')).text.strip()
         product_name = block.find(
             'p', class_='product-name-content').text.strip()
 
@@ -58,6 +41,7 @@ def parse_order_data(html_content):
         orders.append({
             'order_id': order_num,
             'order_date': order_date,
+            'platform': platform,
             'product_name': product_name_clean,
             'unit': unit,
             'price': price

@@ -1,0 +1,1 @@
+__SIGN_IN_URL__ = 'https://www.gamer.com.tw/ajax/signin.php'

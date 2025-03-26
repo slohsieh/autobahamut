@@ -1,21 +1,10 @@
 import requests
-import utils
 from bs4 import BeautifulSoup
 import re
 import time
 from datetime import datetime
 import pandas as pd
 from typing import Dict
-
-
-def login() -> requests.Session:
-    login_info = utils.login_info()
-    sess = requests.session()
-    sess.headers.update(utils.headers_pre_login)
-    sess.post('https://api.gamer.com.tw/mobile_app/user/v3/do_login.php', 
-              data=login_info)
-    sess.headers = utils.headers_post_login
-    return sess
 
 def parse_order_data(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -79,9 +68,8 @@ def get_all_orders(base_url, sess):
 
     return all_orders
 
-def read_orders_df():
+def read_orders_df(sess: requests.Session):
     base_url = 'https://buy.gamer.com.tw/atmHistory.php?filter=5'
-    sess = login()
     all_orders = get_all_orders(base_url, sess)
     df = pd.DataFrame(all_orders)
     df['price'] = pd.to_numeric(df['price'])

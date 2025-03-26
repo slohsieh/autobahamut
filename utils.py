@@ -3,6 +3,8 @@ import os
 from os.path import dirname, join
 import json
 from collections import namedtuple
+from typing import Dict
+import requests
 from datetime import datetime, date as _date
 
 script_dir = dirname(__file__)
@@ -25,6 +27,14 @@ headers_post_login = {
         'x-bahamut-app-version': '251',
         'accept-encoding': 'gzip'
     }
+
+def login(login_info: Dict) -> requests.Session:
+    sess = requests.session()
+    sess.headers.update(headers_pre_login)
+    sess.post('https://api.gamer.com.tw/mobile_app/user/v3/do_login.php', 
+              data=login_info)
+    sess.headers = headers_post_login
+    return sess
 
 def read_config():
     config_path = os.path.join(script_dir, 'config.json')

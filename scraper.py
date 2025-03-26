@@ -169,9 +169,9 @@ def read_console_products(sess, console_code: int) -> Dict:
     for sn in sns:
         url = f'https://buy.gamer.com.tw/atmItem.php?sn={sn}'
         response = sess.get(url)
-        procuct_info = parse_product_info(response.text)
-        procuct_info = procuct_info | {'sn': sn}
-        products.append(procuct_info)
+        product_info = parse_product_info(response.text)
+        product_info = product_info | {'sn': sn}
+        products.append(product_info)
         time.sleep(0.5)
     return products
 
